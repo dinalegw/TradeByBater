@@ -4,6 +4,8 @@ Trading Made Easier — Built for Nigeria, Ready for the World.
 
 # TradeByBater
 
+---
+
 TradeByBater is a modern barter platform built to reconnect people through direct exchange of goods and services without using currency. It is designed to support global trading, trusted partnerships, and sustainable commerce.
 
 ## What this project is
