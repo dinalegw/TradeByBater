@@ -4,9 +4,8 @@
       "id": "user-1",
       "username": "admin",
       "fullName": "Admin User",
-      "password": "password",
+      "passwordHash": "$2b$10$JAEmN5TU3NQATAS9cHRgxu0FzXJ2XKla6X0VMDRY5hOMiRhp3PEiq",
       "role": "admin",
-      "token": "admin-token",
       "createdAt": "2026-05-18T00:00:00.000Z"
     }
   ],
@@ -20,6 +19,9 @@
       "location": "Lagos",
       "ownerId": "user-1",
       "ownerName": "Admin User",
+      "status": "approved",
+      "flags": 0,
+      "reports": [],
       "createdAt": "2026-05-18T00:00:00.000Z"
     },
     {
@@ -31,6 +33,9 @@
       "location": "Abuja",
       "ownerId": "user-1",
       "ownerName": "Admin User",
+      "status": "approved",
+      "flags": 0,
+      "reports": [],
       "createdAt": "2026-05-18T00:00:00.000Z"
     }
   ],

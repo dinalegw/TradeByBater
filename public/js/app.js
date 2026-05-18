@@ -113,15 +113,30 @@ function renderListings() {
     node.querySelector('.listing-wants').textContent = `Wants: ${listing.wants}`;
 
     const button = node.querySelector('.trade-button');
+    const reportButton = node.querySelector('.report-button');
+
     if (!state.user || listing.ownerId === state.user.id) {
       button.textContent = 'View listing';
       button.disabled = true;
+      reportButton.disabled = true;
     } else {
       button.addEventListener('click', () => openModal(listing));
+      reportButton.addEventListener('click', () => reportListing(listing.id));
     }
 
     elements.listingsGrid.appendChild(node);
   });
+}
+
+function reportListing(listingId) {
+  if (!state.user) {
+    alert('Sign in before reporting listings.');
+    return;
+  }
+
+  apiRequest(`/api/listings/${listingId}/report`, { method: 'POST' })
+    .then(() => alert('Listing reported. Moderators will review it.'))
+    .catch((error) => alert(error.message));
 }
 
 function renderTrades() {

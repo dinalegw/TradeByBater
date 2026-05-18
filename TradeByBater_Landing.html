@@ -232,14 +232,14 @@
 <body>
 
 <nav>
-  <a href="#" class="logo">Trade<span>ByBater</span> 🇳🇬</a>
+  <a href="/app.html" class="logo">Trade<span>ByBater</span> 🇳🇬</a>
   <ul class="nav-links">
     <li><a href="#how">How it works</a></li>
     <li><a href="#market">Nigeria</a></li>
     <li><a href="#ai">AI Assistant</a></li>
     <li><a href="#money">Revenue</a></li>
     <li><a href="#faq">FAQ</a></li>
-    <li><a href="#join" class="nav-cta">Start Trading</a></li>
+    <li><a href="/app.html" class="nav-cta">Open App</a></li>
   </ul>
 </nav>
 
@@ -252,7 +252,7 @@
   <p class="sub">Nigeria's premier AI-powered barter platform. Exchange goods, skills, and services directly — no Naira, no dollars, no middleman.</p>
   <p class="tag"><em>"Exchange value directly, not currency." 🤝 — Trading Made Easier</em></p>
   <div class="btns">
-    <a href="#join" class="bp">List Something to Trade →</a>
+    <a href="/app.html" class="bp">Open the App →</a>
     <a href="#how" class="bg2">See How It Works</a>
   </div>
   <div class="stats">
@@ -340,7 +340,7 @@
 <section>
   <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
     <div><div class="lbl">Live Trades</div><div class="stitle">Recent <span>Listings</span></div></div>
-    <a href="#join" class="bg2" style="font-size:.875rem;">View All Listings →</a>
+    <a href="/app.html" class="bg2" style="font-size:.875rem;">View All Listings →</a>
   </div>
   <div class="listings">
     <div class="lcard"><div class="limg" style="background:#E8F5E9;">💻</div><div class="lbody"><span class="ltag">Tech & Gadgets</span><div class="lt">HP Laptop — Core i5, 8GB RAM</div><div class="lw">Wants: <strong>Graphic Design (3 months)</strong></div><div class="lmeta"><div class="lu"><div class="av" style="background:#1A6B3C;">AO</div>Adewale O. · Lagos</div><span style="color:#C8931A;">★ 4.9</span></div></div></div>
@@ -437,7 +437,8 @@
 <section id="join" class="cta">
   <h2>Ready to Start<br>Trading Smarter?</h2>
   <p>Join thousands of Nigerians already exchanging real value across all 36 states. No fees. No currency. Just honest trade.</p>
-  <a href="https://github.com/dinalegw/TradeByBater" target="_blank" class="bw">Join TradeByBater →</a>
+  <a href="/app.html" class="bw">Open the App →</a>
+  <a href="https://github.com/dinalegw/TradeByBater" target="_blank" class="app-badge">View GitHub Source</a>
   <div class="app-badges">
     <a href="#" class="app-badge">📱 iOS App — Coming Soon</a>
     <a href="#" class="app-badge">🤖 Android App — Coming Soon</a>
@@ -490,25 +491,53 @@ function toggleFaq(el) {
 }
 
 // Demo AI chat responses
-const responses = {
-  'list': "Tap 'List Something to Trade', add photos, describe your item clearly, and write what you want in return. Your listing goes live across all 36 Nigerian states instantly!",
-  'trade': "Browse listings by category or location, find something you want, and send a trade proposal. The owner reviews it and accepts, declines, or counters. You then exchange and both confirm completion.",
-  'free': "Yes — 100% free to post and trade. We make money through optional premium features like listing boosts and verified badges. Your trades are never taxed.",
-  'safe': "Every user is phone-verified. For high-value trades, use our escrow service. Our dispute team is available to mediate any conflicts. Safety is our top priority.",
-  'state': "All 36 Nigerian states plus FCT Abuja are covered from Day 1 — Lagos, Abuja, Port Harcourt, Kano, Ibadan, Enugu, and every other state.",
-  'app': "iOS and Android apps are coming very soon! Both will have the full AI assistant built in so you get support anywhere, anytime.",
-  'nigeri': "Nigeria is our #1 priority market. 220M people, 65% informal economy, deep barter culture through Ajo cooperatives and market trading. We are digitising what Nigerians already do naturally.",
-  'scam': "We have phone verification, BVN-linked trust badges, AI fraud detection, escrow protection, and a dispute resolution team. Multiple layers protect every trade.",
-  'bank': "No bank account needed. That's the whole point of barter — exchange value directly without money, banks, or financial infrastructure.",
-  'default': "Great question! TradeByBater lets you exchange goods, skills, and services directly across all 36 Nigerian states — zero fees, maximum trust. Is there something specific about listing, trading, safety, or the platform you'd like to know?"
+const responseSets = {
+  list: [
+    "Start by tapping 'List Something to Trade.' Describe your item clearly, add photos if available, and say what you want in exchange. Your listing will go live in seconds.",
+    "To post a listing, enter what you have, choose a category, describe the condition, and explain what you want. Then publish it so other traders can discover it."
+  ],
+  trade: [
+    "Browse the marketplace by category or location, then choose a listing you want. Send a direct trade request and wait for the owner to accept, decline, or counter. Once agreed, exchange and confirm completion.",
+    "Find a good match, click the listing, and send a clear offer message. The owner reviews it and can approve or counter the trade. That is how barter deals move forward." 
+  ],
+  free: [
+    "Yes — posting and trading are free. We earn revenue through optional features like boosted listings, verified trader badges, and premium tools for businesses.",
+    "The platform is free to use for buyers and sellers. Optional paid upgrades are only for extra visibility and trust-building features." 
+  ],
+  safe: [
+    "We require phone verification and we monitor listings for suspicious patterns. For higher-value trades, use escrow and our dispute process to stay protected.",
+    "Safety is critical. We combine user verification, AI moderation, and a trust score system to keep the marketplace secure." 
+  ],
+  state: [
+    "All 36 Nigerian states plus the FCT are supported. Lagos, Abuja, Port Harcourt, Kano, Ibadan, Enugu and every major market are included.",
+    "The platform is built for Nigeria first and covers every state from Day 1, ensuring broad reach and local relevance." 
+  ],
+  app: [
+    "The web app is live now. Mobile apps are coming soon and will include the same AI support and listing experience.",
+    "Use the browser-based app today. The iOS and Android versions will follow with the full TradeByBater experience." 
+  ],
+  scam: [
+    "We use AI to flag suspicious activity, phone verification for every account, and an optional escrow workflow for higher-risk trades.",
+    "Our system is designed to reduce scams with verification, moderation, and a dispute team available when needed." 
+  ],
+  bank: [
+    "No bank account is needed. Barter is built for direct exchange, so you can trade using goods, skills, and services instead of money.",
+    "TradeByBater works without banks. You only need a phone and something to trade, which makes it accessible for many Nigerians." 
+  ],
+  nigeri: [
+    "Nigeria is our priority market because its informal economy and strong trade culture make it a perfect fit for barter.",
+    "We focus on Nigeria first because barter is already part of everyday life here — from markets to cooperative groups." 
+  ]
 };
 
 function getReply(msg) {
   const m = msg.toLowerCase();
-  for(const [key, val] of Object.entries(responses)) {
-    if(m.includes(key)) return val;
+  for (const [key, answers] of Object.entries(responseSets)) {
+    if (m.includes(key)) {
+      return answers[Math.floor(Math.random() * answers.length)];
+    }
   }
-  return responses.default;
+  return "That's a great question. TradeByBater helps you exchange goods, skills, and services directly across Nigeria with a secure community-first workflow. Ask me anything specific about listings, trades, safety, or how to get started.";
 }
 
 function addMsg(container, text, type) {

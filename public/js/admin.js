@@ -34,18 +34,41 @@ function renderStats(stats) {
   `;
 }
 
+function handleListingAction(listingId, action) {
+  return apiRequest(`/api/admin/listings/${listingId}/${action}`, { method: 'POST' })
+    .then(() => loadAdminDashboard())
+    .catch((error) => alert(`Failed to ${action}: ${error.message}`));
+}
+
 function renderListings(listings) {
   adminElements.listingsTable.innerHTML = '';
   listings.slice(0, 20).forEach((listing) => {
     const row = document.createElement('tr');
+    const status = listing.status || 'pending';
+    const flags = listing.flags != null ? listing.flags : 0;
     row.innerHTML = `
       <td>${listing.title}</td>
       <td>${listing.category}</td>
       <td>${listing.ownerName}</td>
       <td>${listing.location}</td>
+      <td>${status}</td>
+      <td>${flags}</td>
       <td>${formatDate(listing.createdAt)}</td>
+      <td>
+        <button class="admin-action-button" data-listing-id="${listing.id}" data-action="approve">Approve</button>
+        <button class="admin-action-button" data-listing-id="${listing.id}" data-action="reject">Reject</button>
+        <button class="admin-action-button danger" data-listing-id="${listing.id}" data-action="ban">Ban Owner</button>
+      </td>
     `;
     adminElements.listingsTable.appendChild(row);
+  });
+
+  adminElements.listingsTable.querySelectorAll('.admin-action-button').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      const listingId = event.target.dataset.listingId;
+      const action = event.target.dataset.action;
+      handleListingAction(listingId, action);
+    });
   });
 }
 

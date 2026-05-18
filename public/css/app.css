@@ -91,16 +91,36 @@ button {
 }
 
 .action-button,
-.secondary-button {
+.secondary-button,
+.admin-action-button {
   border: none;
   border-radius: 999px;
-  padding: 0.85rem 1.25rem;
+  padding: 0.55rem 0.9rem;
   font-weight: 700;
 }
 
 .action-button {
   background: var(--primary);
   color: #fff;
+}
+
+.admin-action-button {
+  background: #eef6f1;
+  color: var(--text);
+  margin-right: 0.35rem;
+}
+
+.admin-action-button:hover {
+  background: #d8eadf;
+}
+
+.admin-action-button.danger {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.admin-action-button.danger:hover {
+  background: #f1b0b7;
 }
 
 .secondary-button {
