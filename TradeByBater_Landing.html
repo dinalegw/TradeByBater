@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeByBater 🇳🇬 — Exchange Value, Not Currency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1A6B3C; --gm: #228B50; --gl: #D6F0E0;
+    --gold: #C8931A; --gol: #FDF3DC; --gob: #F5A623;
+    --dark: #0E1A13; --dk2: #1C2E22;
+    --white: #FAFAF7; --muted: #5A7060;
+    --border: rgba(26,107,60,0.15);
+    --r: 16px; --rs: 10px;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: .9rem 5%; background: rgba(250,250,247,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--green); letter-spacing: -.5px; text-decoration: none; }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: .875rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta { background: var(--green); color: #fff !important; padding: .45rem 1.2rem; border-radius: 50px; font-weight: 500 !important; transition: background .2s !important; }
+  .nav-cta:hover { background: var(--gm) !important; }
+
+  /* HERO */
+  .hero { position: relative; min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 5% 5rem; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(26,107,60,.07) 0%, transparent 60%), radial-gradient(circle 300px at 10% 80%, rgba(200,147,26,.06) 0%, transparent 60%); pointer-events: none; }
+  .hero-pattern { position: absolute; top: 0; right: 0; width: 45%; height: 100%; opacity: .035; background-image: repeating-linear-gradient(45deg, var(--green) 0, var(--green) 2px, transparent 2px, transparent 28px), repeating-linear-gradient(-45deg, var(--gold) 0, var(--gold) 2px, transparent 2px, transparent 28px); pointer-events: none; }
+  .badge { display: inline-flex; align-items: center; gap: .5rem; background: var(--gol); border: 1px solid rgba(200,147,26,.3); color: var(--gold); font-size: .78rem; font-weight: 500; padding: .35rem 1rem; border-radius: 50px; margin-bottom: 1.5rem; animation: up .6s ease both; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; margin-bottom: 1rem; animation: up .7s .1s ease both; max-width: 860px; }
+  .hg { color: var(--green); }
+  .ha { color: var(--gold); }
+  .hero p.sub { font-size: 1.1rem; color: var(--muted); max-width: 520px; line-height: 1.75; margin-bottom: .5rem; font-weight: 300; animation: up .7s .15s ease both; }
+  .hero p.tag { font-size: .82rem; color: var(--muted); margin-bottom: 2rem; font-style: italic; animation: up .7s .2s ease both; }
+  .btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; animation: up .7s .25s ease both; }
+  .bp { background: var(--green); color: #fff; padding: .85rem 1.9rem; border-radius: 50px; font-size: .975rem; font-weight: 500; text-decoration: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: transform .2s, box-shadow .2s; }
+  .bp:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,107,60,.28); }
+  .bg2 { background: transparent; color: var(--green); padding: .85rem 1.9rem; border-radius: 50px; font-size: .975rem; font-weight: 500; border: 1.5px solid var(--green); text-decoration: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background .2s; }
+  .bg2:hover { background: var(--gl); }
+  .stats { display: flex; gap: 2.5rem; margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border); animation: up .7s .35s ease both; flex-wrap: wrap; justify-content: center; }
+  .sn { font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .sl { font-size: .75rem; color: var(--muted); margin-top: .25rem; }
+
+  /* TICKER */
+  .ticker { background: var(--dark); padding: .7rem 0; overflow: hidden; white-space: nowrap; }
+  .ti { display: inline-flex; gap: 2.5rem; animation: tick 22s linear infinite; }
+  .ti span { font-size: .8rem; color: rgba(255,255,255,.6); }
+  .td { color: var(--gob); }
+  @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* SECTIONS */
+  section { padding: 4.5rem 5%; }
+  .lbl { font-size: .75rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .6rem; }
+  .stitle { font-family: 'Syne', sans-serif; font-size: clamp(1.7rem, 3.5vw, 2.6rem); font-weight: 700; line-height: 1.1; letter-spacing: -1px; }
+  .stitle span { color: var(--green); }
+
+  /* STEPS */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+  .step { background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 1.75rem 1.4rem; transition: transform .2s, box-shadow .2s; }
+  .step:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(26,107,60,.09); }
+  .snum { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; color: var(--gl); line-height: 1; margin-bottom: .75rem; }
+  .step h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+  .step p { font-size: .875rem; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+  /* NIGERIA */
+  .nig-wrap { padding: 0 3% 4rem; }
+  .nig { background: var(--dark); color: #fff; border-radius: 22px; padding: 4rem 5%; overflow: hidden; position: relative; }
+  .nig::before { content: ''; position: absolute; top: -80px; right: -80px; width: 380px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(26,107,60,.3) 0%, transparent 70%); pointer-events: none; }
+  .nig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+  .nig .lbl { color: var(--gob); }
+  .nig .stitle { color: #fff; }
+  .nig .stitle span { color: var(--gob); }
+  .nig-body { font-size: .95rem; color: rgba(255,255,255,.6); line-height: 1.8; margin: 1rem 0 1.5rem; font-weight: 300; }
+  .nig-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ns { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: var(--rs); padding: 1.1rem; }
+  .nsn { font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--gob); line-height: 1; }
+  .nsl { font-size: .75rem; color: rgba(255,255,255,.45); margin-top: .25rem; }
+  .pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+  .pill { background: rgba(26,107,60,.25); border: 1px solid rgba(26,107,60,.45); color: rgba(255,255,255,.75); font-size: .75rem; padding: .28rem .8rem; border-radius: 50px; }
+
+  /* CATEGORIES */
+  .cat-sec { background: var(--gl); }
+  .cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .cat { background: #fff; border-radius: var(--r); padding: 1.25rem 1rem; text-align: center; border: 1px solid var(--border); cursor: pointer; transition: transform .2s, box-shadow .2s; }
+  .cat:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(26,107,60,.1); }
+  .ce { font-size: 1.9rem; margin-bottom: .6rem; }
+  .cn { font-family: 'Syne', sans-serif; font-size: .875rem; font-weight: 700; }
+  .cc { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+
+  /* LISTINGS */
+  .listings { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+  .lcard { background: #fff; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; transition: transform .2s, box-shadow .2s; cursor: pointer; }
+  .lcard:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(26,107,60,.09); }
+  .limg { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+  .lbody { padding: 1.1rem; }
+  .ltag { display: inline-block; font-size: .7rem; font-weight: 500; color: var(--green); background: var(--gl); padding: .18rem .6rem; border-radius: 50px; margin-bottom: .5rem; }
+  .lt { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: .35rem; }
+  .lw { font-size: .8rem; color: var(--muted); margin-bottom: .75rem; font-weight: 300; }
+  .lw strong { color: var(--gold); font-weight: 500; }
+  .lmeta { display: flex; align-items: center; justify-content: space-between; font-size: .75rem; color: var(--muted); }
+  .av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .65rem; font-weight: 600; color: #fff; margin-right: 5px; }
+  .lu { display: flex; align-items: center; }
+
+  /* FEATURES */
+  .feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-top: 2.5rem; }
+  .feat { padding: 1.5rem; border-left: 3px solid var(--gl); transition: border-color .2s; }
+  .feat:hover { border-color: var(--green); }
+  .fic { font-size: 1.6rem; margin-bottom: .75rem; }
+  .feat h3 { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: .4rem; }
+  .feat p { font-size: .845rem; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+  /* MONEY */
+  .money-sec { background: var(--dark); }
+  .money-sec .lbl { color: var(--gob); }
+  .money-sec .stitle { color: #fff; }
+  .money-sec .stitle span { color: var(--gob); }
+  .money-sub { font-size: .95rem; color: rgba(255,255,255,.55); line-height: 1.75; margin: .75rem 0 2rem; font-weight: 300; max-width: 600px; }
+  .rev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .rev-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.07); border-radius: var(--rs); padding: 1.25rem; }
+  .rev-icon { font-size: 1.5rem; margin-bottom: .6rem; }
+  .rev-card h3 { font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700; color: #fff; margin-bottom: .35rem; }
+  .rev-card p { font-size: .8rem; color: rgba(255,255,255,.45); line-height: 1.6; font-weight: 300; }
+  .rev-tag { display: inline-block; font-size: .68rem; font-weight: 500; background: rgba(245,166,35,.15); color: var(--gob); padding: .15rem .55rem; border-radius: 50px; margin-top: .5rem; }
+
+  /* AI */
+  .ai-sec { background: linear-gradient(135deg, #EAF3DE 0%, var(--white) 100%); }
+  .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2.5rem; }
+  .ai-chat { background: #fff; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+  .ai-header { background: var(--green); padding: 1rem 1.25rem; display: flex; align-items: center; gap: .75rem; }
+  .ai-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; }
+  .ai-header span { color: #fff; font-size: .875rem; font-weight: 500; }
+  .ai-messages { padding: 1.25rem; display: flex; flex-direction: column; gap: .75rem; min-height: 200px; }
+  .msg { max-width: 80%; padding: .6rem .9rem; border-radius: 12px; font-size: .82rem; line-height: 1.55; }
+  .msg-user { background: var(--green); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .msg-ai { background: var(--gl); color: var(--dark); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .ai-input { padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: .5rem; }
+  .ai-input input { flex: 1; border: 1px solid var(--border); border-radius: 50px; padding: .55rem 1rem; font-size: .82rem; font-family: 'DM Sans', sans-serif; background: var(--white); outline: none; }
+  .ai-input button { background: var(--green); color: #fff; border: none; border-radius: 50px; padding: .55rem 1rem; font-size: .8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .ai-features { display: flex; flex-direction: column; gap: 1.25rem; }
+  .aif { display: flex; gap: 1rem; align-items: flex-start; }
+  .aif-icon { width: 40px; height: 40px; background: var(--gl); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .aif h4 { font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700; margin-bottom: .25rem; }
+  .aif p { font-size: .82rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+  /* ROADMAP */
+  .road-sec { background: var(--dk2); }
+  .road-sec .lbl { color: var(--gob); }
+  .road-sec .stitle { color: #fff; }
+  .road-sec .stitle span { color: var(--gob); }
+  .phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid rgba(255,255,255,.06); border-radius: var(--r); overflow: hidden; margin-top: 2.5rem; }
+  .phase { padding: 1.75rem 1.4rem; border-right: 1px solid rgba(255,255,255,.06); }
+  .phase:last-child { border-right: none; }
+  .phase-active { background: rgba(26,107,60,.18); }
+  .pt { font-size: .68rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: .5rem; }
+  .phase-active .pt { color: var(--gob); }
+  .pht { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: .9rem; }
+  .phase ul { list-style: none; }
+  .phase li { font-size: .78rem; color: rgba(255,255,255,.45); margin-bottom: .3rem; padding-left: 11px; position: relative; font-weight: 300; }
+  .phase li::before { content: '→'; position: absolute; left: 0; color: var(--gob); font-size: .65rem; top: 1px; }
+
+  /* FAQ */
+  .faq-sec { background: var(--white); }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2.5rem; }
+  .faq-item { background: #fff; border: 1px solid var(--border); border-radius: var(--rs); padding: 1.5rem; cursor: pointer; transition: border-color .2s; }
+  .faq-item:hover { border-color: rgba(26,107,60,.3); }
+  .faq-q { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: .6rem; display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+  .faq-a { font-size: .86rem; color: var(--muted); line-height: 1.7; font-weight: 300; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open { border-color: var(--green); }
+  .faq-arr { color: var(--green); font-size: 1rem; flex-shrink: 0; transition: transform .2s; }
+  .faq-item.open .faq-arr { transform: rotate(45deg); }
+
+  /* CTA */
+  .cta { background: var(--green); text-align: center; padding: 6rem 5%; position: relative; overflow: hidden; }
+  .cta::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(60deg, rgba(255,255,255,.02) 0, rgba(255,255,255,.02) 1px, transparent 1px, transparent 38px), repeating-linear-gradient(-60deg, rgba(255,255,255,.02) 0, rgba(255,255,255,.02) 1px, transparent 1px, transparent 38px); pointer-events: none; }
+  .cta h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 1rem; }
+  .cta p { font-size: 1rem; color: rgba(255,255,255,.7); max-width: 460px; margin: 0 auto 2rem; font-weight: 300; line-height: 1.7; }
+  .bw { background: #fff; color: var(--green); padding: .85rem 2.1rem; border-radius: 50px; font-size: .975rem; font-weight: 600; text-decoration: none; display: inline-block; font-family: 'DM Sans', sans-serif; transition: transform .2s; }
+  .bw:hover { transform: translateY(-2px); }
+  .app-badges { display: flex; gap: 1rem; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap; }
+  .app-badge { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #fff; padding: .55rem 1.2rem; border-radius: 50px; font-size: .8rem; text-decoration: none; }
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 3rem 5% 0; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2rem; align-items: start; }
+  .fb .logo { font-size: 1.2rem; margin-bottom: .75rem; display: block; }
+  .fb p { font-size: .8rem; color: rgba(255,255,255,.4); line-height: 1.7; font-weight: 300; }
+  .fc h4 { font-family: 'Syne', sans-serif; font-size: .78rem; font-weight: 700; color: #fff; margin-bottom: .9rem; letter-spacing: .08em; text-transform: uppercase; }
+  .fc ul { list-style: none; }
+  .fc li { margin-bottom: .45rem; }
+  .fc a { font-size: .8rem; color: rgba(255,255,255,.38); text-decoration: none; transition: color .2s; }
+  .fc a:hover { color: var(--gob); }
+  .fbot { margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,.06); padding: 1.25rem 0; display: flex; justify-content: space-between; font-size: .75rem; color: rgba(255,255,255,.25); }
+
+  /* AI FLOAT BUTTON */
+  .ai-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; }
+  .ai-btn { width: 56px; height: 56px; background: var(--green); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 20px rgba(26,107,60,.4); transition: transform .2s; }
+  .ai-btn:hover { transform: scale(1.08); }
+  .ai-popup { position: fixed; bottom: 5.5rem; right: 2rem; width: 320px; background: #fff; border-radius: var(--r); border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,.12); display: none; flex-direction: column; overflow: hidden; z-index: 998; max-height: 480px; }
+  .ai-popup.open { display: flex; }
+  .aip-head { background: var(--green); padding: .9rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+  .aip-head-left { display: flex; align-items: center; gap: .6rem; }
+  .aip-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; }
+  .aip-head span { color: #fff; font-size: .875rem; font-weight: 500; }
+  .aip-close { background: none; border: none; color: rgba(255,255,255,.6); cursor: pointer; font-size: 1.1rem; padding: 0; }
+  .aip-msgs { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: .65rem; }
+  .aip-input { padding: .75rem; border-top: 1px solid var(--border); display: flex; gap: .5rem; }
+  .aip-input input { flex: 1; border: 1px solid var(--border); border-radius: 50px; padding: .5rem .9rem; font-size: .8rem; font-family: 'DM Sans', sans-serif; outline: none; background: var(--white); }
+  .aip-input button { background: var(--green); color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  /* ANIMATIONS */
+  @keyframes up { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+  /* RESPONSIVE */
+  @media (max-width: 860px) {
+    .nig-grid, .ai-grid, .feats { grid-template-columns: 1fr; }
+    .phases { grid-template-columns: 1fr 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .ai-popup { right: 1rem; width: calc(100vw - 2rem); }
+    .ai-float { right: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Trade<span>ByBater</span> 🇳🇬</a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#market">Nigeria</a></li>
+    <li><a href="#ai">AI Assistant</a></li>
+    <li><a href="#money">Revenue</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#join" class="nav-cta">Start Trading</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="badge">🇳🇬 Built for Nigeria. Ready for the World.</div>
+  <h1>Trade What You <span class="hg">Have</span><br>Get What You <span class="ha">Need</span></h1>
+  <p class="sub">Nigeria's premier AI-powered barter platform. Exchange goods, skills, and services directly — no Naira, no dollars, no middleman.</p>
+  <p class="tag"><em>"Exchange value directly, not currency." 🤝 — Trading Made Easier</em></p>
+  <div class="btns">
+    <a href="#join" class="bp">List Something to Trade →</a>
+    <a href="#how" class="bg2">See How It Works</a>
+  </div>
+  <div class="stats">
+    <div><div class="sn">2,400+</div><div class="sl">Active Listings</div></div>
+    <div><div class="sn">36</div><div class="sl">Nigerian States</div></div>
+    <div><div class="sn">96%</div><div class="sl">Trade Success Rate</div></div>
+    <div><div class="sn">₦0</div><div class="sl">Transaction Fees</div></div>
+    <div><div class="sn">24/7</div><div class="sl">AI Support</div></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ti" id="tk">
+    <span>Lagos</span><span class="td">•</span><span>Laptop for Tailoring</span><span class="td">•</span>
+    <span>Abuja</span><span class="td">•</span><span>Coding for Graphic Design</span><span class="td">•</span>
+    <span>Port Harcourt</span><span class="td">•</span><span>Freezer for Building Materials</span><span class="td">•</span>
+    <span>Kano</span><span class="td">•</span><span>Farmland for Equipment</span><span class="td">•</span>
+    <span>Ibadan</span><span class="td">•</span><span>Photography for Web Design</span><span class="td">•</span>
+    <span>Enugu</span><span class="td">•</span><span>Solar Panel for Generator</span><span class="td">•</span>
+    <span>Benin City</span><span class="td">•</span><span>Music Lessons for Catering</span><span class="td">•</span>
+    <span>Jos</span><span class="td">•</span><span>Farm Produce for Clothes</span><span class="td">•</span>
+    <span>Owerri</span><span class="td">•</span><span>Legal Advice for Web Dev</span><span class="td">•</span>
+    <span>Kaduna</span><span class="td">•</span><span>Fabric for Furniture</span><span class="td">•</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="lbl">Simple Process</div>
+  <div class="stitle">How <span>TradeByBater</span> Works</div>
+  <div class="steps">
+    <div class="step"><div class="snum">01</div><h3>List What You Have</h3><p>Post your goods, skills, or services with photos and describe exactly what you want in return.</p></div>
+    <div class="step"><div class="snum">02</div><h3>Discover What You Need</h3><p>Browse listings by category or location across all 36 states. AI surfaces the best trade opportunities near you.</p></div>
+    <div class="step"><div class="snum">03</div><h3>Propose a Trade</h3><p>Send a direct offer, negotiate terms, and confirm details through secure in-app messaging.</p></div>
+    <div class="step"><div class="snum">04</div><h3>Exchange and Review</h3><p>Complete the trade, confirm delivery, and leave a review to build your trusted trader reputation.</p></div>
+  </div>
+</section>
+
+<!-- NIGERIA -->
+<div class="nig-wrap" id="market">
+  <div class="nig">
+    <div class="nig-grid">
+      <div>
+        <div class="lbl">Priority Market</div>
+        <div class="stitle">Built for <span>Nigeria</span> First,<br>Then the World</div>
+        <p class="nig-body">Nigeria has 220 million people, a deeply rooted culture of community exchange, and one of the world's most dynamic informal economies. From Ajo cooperatives to open-air market swaps — TradeByBater digitises what Nigerians have always done naturally.<br><br>In a high-inflation economy, barter protects your purchasing power. Trade a skill, a product, or a service and get real value back — without touching a single Naira.</p>
+        <div class="pills">
+          <span class="pill">Lagos</span><span class="pill">Abuja</span><span class="pill">Port Harcourt</span>
+          <span class="pill">Kano</span><span class="pill">Ibadan</span><span class="pill">Enugu</span>
+          <span class="pill">Benin City</span><span class="pill">Jos</span><span class="pill">Owerri</span>
+          <span class="pill">Kaduna</span><span class="pill">Abeokuta</span><span class="pill">Calabar</span>
+          <span class="pill">+ All 36 States + FCT</span>
+        </div>
+      </div>
+      <div class="nig-stats">
+        <div class="ns"><div class="nsn">220M</div><div class="nsl">Population to serve</div></div>
+        <div class="ns"><div class="nsn">65%</div><div class="nsl">Informal economy share</div></div>
+        <div class="ns"><div class="nsn">84M+</div><div class="nsl">Internet users</div></div>
+        <div class="ns"><div class="nsn">#1</div><div class="nsl">Africa's largest economy</div></div>
+        <div class="ns"><div class="nsn">36</div><div class="nsl">States fully covered</div></div>
+        <div class="ns"><div class="nsn">17M+</div><div class="nsl">Diaspora network</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories" class="cat-sec">
+  <div class="lbl">What Gets Traded</div>
+  <div class="stitle">8 Categories on <span>TradeByBater</span></div>
+  <div class="cats">
+    <div class="cat"><div class="ce">💻</div><div class="cn">Tech & Gadgets</div><div class="cc">340+ listings</div></div>
+    <div class="cat"><div class="ce">🔧</div><div class="cn">Skills & Services</div><div class="cc">620+ listings</div></div>
+    <div class="cat"><div class="ce">👗</div><div class="cn">Fashion</div><div class="cc">510+ listings</div></div>
+    <div class="cat"><div class="ce">🏠</div><div class="cn">Home & Furniture</div><div class="cc">280+ listings</div></div>
+    <div class="cat"><div class="ce">🌾</div><div class="cn">Food & Agric</div><div class="cc">190+ listings</div></div>
+    <div class="cat"><div class="ce">📚</div><div class="cn">Education</div><div class="cc">160+ listings</div></div>
+    <div class="cat"><div class="ce">🚗</div><div class="cn">Transport & Autos</div><div class="cc">95+ listings</div></div>
+    <div class="cat"><div class="ce">🎨</div><div class="cn">Creative Arts</div><div class="cc">210+ listings</div></div>
+  </div>
+</section>
+
+<!-- SAMPLE LISTINGS -->
+<section>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+    <div><div class="lbl">Live Trades</div><div class="stitle">Recent <span>Listings</span></div></div>
+    <a href="#join" class="bg2" style="font-size:.875rem;">View All Listings →</a>
+  </div>
+  <div class="listings">
+    <div class="lcard"><div class="limg" style="background:#E8F5E9;">💻</div><div class="lbody"><span class="ltag">Tech & Gadgets</span><div class="lt">HP Laptop — Core i5, 8GB RAM</div><div class="lw">Wants: <strong>Graphic Design (3 months)</strong></div><div class="lmeta"><div class="lu"><div class="av" style="background:#1A6B3C;">AO</div>Adewale O. · Lagos</div><span style="color:#C8931A;">★ 4.9</span></div></div></div>
+    <div class="lcard"><div class="limg" style="background:#FFF8E1;">☀️</div><div class="lbody"><span class="ltag">Home & Energy</span><div class="lt">200W Solar Panel + Inverter</div><div class="lw">Wants: <strong>Building materials or roofing sheets</strong></div><div class="lmeta"><div class="lu"><div class="av" style="background:#C8931A;">FN</div>Fatima N. · Abuja</div><span style="color:#C8931A;">★ 5.0</span></div></div></div>
+    <div class="lcard"><div class="limg" style="background:#E3F2FD;">🧑‍💻</div><div class="lbody"><span class="ltag">Skills & Services</span><div class="lt">Full-Stack Web Dev (1 Project)</div><div class="lw">Wants: <strong>Photography or video editing</strong></div><div class="lmeta"><div class="lu"><div class="av" style="background:#1565C0;">CI</div>Chidi I. · Enugu</div><span style="color:#C8931A;">★ 4.8</span></div></div></div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section style="background:#FAFAF7;border-top:1px solid var(--border);">
+  <div class="lbl">Why Trust Us</div>
+  <div class="stitle">Built for <span>Safe</span> Trading</div>
+  <div class="feats">
+    <div class="feat"><div class="fic">🔐</div><h3>Verified Profiles</h3><p>Every trader verifies via phone number. BVN verification available for premium trust levels.</p></div>
+    <div class="feat"><div class="fic">⭐</div><h3>Reputation System</h3><p>Every completed trade earns a review. Your score is public — honesty is rewarded.</p></div>
+    <div class="feat"><div class="fic">🛡️</div><h3>Escrow for High-Value Trades</h3><p>Items held in escrow until both parties confirm delivery — zero risk on big trades.</p></div>
+    <div class="feat"><div class="fic">💬</div><h3>Dispute Resolution</h3><p>A dedicated mediation team resolves disagreements quickly and fairly.</p></div>
+    <div class="feat"><div class="fic">📍</div><h3>Location Discovery</h3><p>Find traders across all 36 Nigerian states for easy in-person handoffs.</p></div>
+    <div class="feat"><div class="fic">🌍</div><h3>Cross-Border Ready</h3><p>Trade with diaspora, neighbouring African countries, and global partners.</p></div>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section id="ai" class="ai-sec">
+  <div class="lbl">AI-Powered</div>
+  <div class="stitle">Your 24/7 <span>AI Trade Assistant</span></div>
+  <p style="color:var(--muted);font-size:.95rem;margin:.6rem 0 0;font-weight:300;max-width:560px;">While our customer service team is being built, our AI handles every question about TradeByBater instantly — on the website, iOS, and Android.</p>
+  <div class="ai-grid">
+    <div class="ai-chat">
+      <div class="ai-header"><div class="ai-dot"></div><span>TradeByBater AI Assistant</span><span style="margin-left:auto;color:rgba(255,255,255,.6);font-size:.75rem;">Always online</span></div>
+      <div class="ai-messages" id="demo-msgs">
+        <div class="msg msg-ai">Hi! I'm the TradeByBater AI. Ask me anything about trading, listings, or how the platform works. 🤝</div>
+        <div class="msg msg-user">How do I post a listing?</div>
+        <div class="msg msg-ai">Easy! Tap "List Something to Trade", add photos of your item, describe it clearly, then write what you want in exchange. Your listing goes live in seconds across all 36 Nigerian states.</div>
+      </div>
+      <div class="ai-input">
+        <input type="text" id="demo-input" placeholder="Ask the AI anything..." />
+        <button onclick="sendDemo()">→</button>
+      </div>
+    </div>
+    <div class="ai-features">
+      <div class="aif"><div class="aif-icon">🤖</div><div><h4>24/7 Instant Answers</h4><p>The AI never sleeps. Get answers about listings, trades, safety, and platform features any time of day or night.</p></div></div>
+      <div class="aif"><div class="aif-icon">🔍</div><div><h4>Smart Trade Matching</h4><p>AI analyses your listing and surfaces the most compatible trades automatically. "Someone in Lagos has exactly what you want."</p></div></div>
+      <div class="aif"><div class="aif-icon">🛡️</div><div><h4>Fraud Detection</h4><p>AI monitors listing patterns for suspicious activity and protects the community before scams reach users.</p></div></div>
+      <div class="aif"><div class="aif-icon">📝</div><div><h4>Listing Writing Help</h4><p>Not sure how to describe your item? AI helps you write listings that get more trade proposals, faster.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVENUE MODEL -->
+<section id="money" class="money-sec">
+  <div class="lbl">Business Model</div>
+  <div class="stitle">How <span>TradeByBater</span> Makes Money</div>
+  <p class="money-sub">Zero transaction fees attract millions of users. Premium features convert serious traders into revenue. Volume creates network effects — and network effects create the moat.</p>
+  <div class="rev-grid">
+    <div class="rev-card"><div class="rev-icon">🚀</div><h3>Listing Boosts</h3><p>Pay to appear at the top of search results and reach more traders faster.</p><span class="rev-tag">Phase 1</span></div>
+    <div class="rev-card"><div class="rev-icon">✅</div><h3>Verified Trader Badge</h3><p>Monthly subscription for premium trust badge — builds credibility, unlocks features.</p><span class="rev-tag">Phase 1</span></div>
+    <div class="rev-card"><div class="rev-icon">🔒</div><h3>Escrow Service Fee</h3><p>Small percentage only on high-value escrow-protected trades — optional, not mandatory.</p><span class="rev-tag">Phase 1</span></div>
+    <div class="rev-card"><div class="rev-icon">🏢</div><h3>Business Accounts</h3><p>Premium accounts for SMEs, artisan collectives, brands, and NGOs.</p><span class="rev-tag">Phase 2</span></div>
+    <div class="rev-card"><div class="rev-icon">📡</div><h3>API Access</h3><p>Paid API tier for third-party platforms and developers to access the marketplace.</p><span class="rev-tag">Phase 3</span></div>
+    <div class="rev-card"><div class="rev-icon">🏦</div><h3>Barter Credit Tokens</h3><p>Digital credits earned through successful trades, redeemable for premium features.</p><span class="rev-tag">Phase 4</span></div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="road-sec">
+  <div class="lbl">The Vision</div>
+  <div class="stitle">From Nigeria to <span>Every Corner of Africa</span> and the World</div>
+  <div class="phases">
+    <div class="phase phase-active"><div class="pt">Phase 1 — Now</div><div class="pht">🇳🇬 Nigeria</div><ul><li>All 36 States + FCT</li><li>Lagos, Abuja, PH hubs</li><li>AI Trade Assistant</li><li>Listings engine</li><li>iOS + Android apps</li><li>Trust system</li></ul></div>
+    <div class="phase"><div class="pt">Phase 2 — 2026</div><div class="pht">🌍 West Africa</div><ul><li>Ghana expansion</li><li>Kenya pilot</li><li>Yoruba/Igbo/Hausa</li><li>ECOWAS corridor</li><li>Business accounts</li></ul></div>
+    <div class="phase"><div class="pt">Phase 3 — 2028</div><div class="pht">🌐 Pan-African</div><ul><li>25 African countries</li><li>AfCFTA integration</li><li>Diaspora bridge</li><li>B2B barter network</li><li>Public API</li></ul></div>
+    <div class="phase"><div class="pt">Phase 4 — 2030</div><div class="pht">🚀 Global</div><ul><li>Worldwide platform</li><li>AI matching v2</li><li>Barter credit tokens</li><li>Enterprise API</li><li>Open marketplace</li></ul></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq-sec">
+  <div class="lbl">Frequently Asked Questions</div>
+  <div class="stitle">Everything You <span>Need to Know</span></div>
+  <div class="faq-grid">
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is TradeByBater really free?<span class="faq-arr">+</span></div><div class="faq-a">Yes — posting listings and making trades is completely free. Revenue comes from optional premium features like listing boosts and verified badges, not by taxing your trades.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What if someone tries to scam me?<span class="faq-arr">+</span></div><div class="faq-a">All users are phone-verified. For high-value trades, use our escrow service — your item is held safely until both parties confirm delivery. Our dispute mediation team handles any conflicts.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Do I need a bank account?<span class="faq-arr">+</span></div><div class="faq-a">No. That's the point. Barter does not require money, a bank account, or any financial infrastructure. Just a phone number and something to trade.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How does the AI assistant work?<span class="faq-arr">+</span></div><div class="faq-a">Our AI is available 24/7 on the website and both mobile apps. Ask it anything about listings, trades, safety, or platform features. It answers instantly and escalates to a human agent when needed.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Which Nigerian states are supported?<span class="faq-arr">+</span></div><div class="faq-a">All 36 states plus the FCT (Abuja). From Lagos Island to Maiduguri — every Nigerian is covered from Day 1.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can businesses use TradeByBater?<span class="faq-arr">+</span></div><div class="faq-a">Absolutely. SMEs, artisans, freelancers, farms, and brands are all welcome. Dedicated Business Accounts with enhanced features are coming in Phase 2.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I trade with someone outside Nigeria?<span class="faq-arr">+</span></div><div class="faq-a">Cross-border trade launches in Phase 2 with West Africa, expands through Phase 3 across the continent, and reaches global scale in Phase 4 by 2027.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is my personal data safe?<span class="faq-arr">+</span></div><div class="faq-a">Yes. We comply with NDPR (Nigeria Data Protection Regulation) and use industry-standard encryption for all personal data. We never sell your information to third parties.</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="join" class="cta">
+  <h2>Ready to Start<br>Trading Smarter?</h2>
+  <p>Join thousands of Nigerians already exchanging real value across all 36 states. No fees. No currency. Just honest trade.</p>
+  <a href="https://github.com/dinalegw/TradeByBater" target="_blank" class="bw">Join TradeByBater →</a>
+  <div class="app-badges">
+    <a href="#" class="app-badge">📱 iOS App — Coming Soon</a>
+    <a href="#" class="app-badge">🤖 Android App — Coming Soon</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fb">
+    <a href="#" class="logo">Trade<span>ByBater</span> 🇳🇬</a>
+    <p><em>Exchange value directly, not currency.</em> 🤝<br>Trading Made Easier — Built for Nigeria, Ready for the World.<br><br>Open Source · MIT License</p>
+  </div>
+  <div class="fc"><h4>Platform</h4><ul><li><a href="#">Browse listings</a></li><li><a href="#">Post a trade</a></li><li><a href="#">How it works</a></li><li><a href="#">Categories</a></li><li><a href="#">Pricing (Free)</a></li></ul></div>
+  <div class="fc"><h4>Company</h4><ul><li><a href="#">About us</a></li><li><a href="#">Blog</a></li><li><a href="https://github.com/dinalegw/TradeByBater">GitHub</a></li><li><a href="#">Press</a></li><li><a href="#">Careers</a></li></ul></div>
+  <div class="fc"><h4>Support</h4><ul><li><a href="#">Help centre</a></li><li><a href="#">Safety guide</a></li><li><a href="#">Contact us</a></li><li><a href="#">Trust & Safety</a></li><li><a href="#">Privacy (NDPR)</a></li></ul></div>
+  <div class="fbot" style="grid-column:1/-1;">
+    <span>© 2026 TradeByBater. Open Source — MIT License.</span>
+    <span>Built with pride in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<!-- AI FLOATING BUTTON -->
+<div class="ai-float">
+  <div class="ai-popup" id="ai-popup">
+    <div class="aip-head">
+      <div class="aip-head-left"><div class="aip-dot"></div><span>TradeByBater AI</span></div>
+      <button class="aip-close" onclick="document.getElementById('ai-popup').classList.remove('open')">✕</button>
+    </div>
+    <div class="aip-msgs" id="float-msgs">
+      <div class="msg msg-ai" style="font-size:.8rem;">👋 Hi! I'm the TradeByBater AI assistant. Ask me anything about how to trade, list items, or how the platform works!</div>
+    </div>
+    <div class="aip-input">
+      <input type="text" id="float-input" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendFloat()" />
+      <button onclick="sendFloat()">→</button>
+    </div>
+  </div>
+  <button class="ai-btn" onclick="document.getElementById('ai-popup').classList.toggle('open')" title="AI Assistant">🤖</button>
+</div>
+
+<script>
+// Ticker loop
+const tk = document.getElementById('tk');
+if(tk) tk.innerHTML += tk.innerHTML;
+
+// FAQ toggle
+function toggleFaq(el) {
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if(!wasOpen) el.classList.add('open');
+}
+
+// Demo AI chat responses
+const responses = {
+  'list': "Tap 'List Something to Trade', add photos, describe your item clearly, and write what you want in return. Your listing goes live across all 36 Nigerian states instantly!",
+  'trade': "Browse listings by category or location, find something you want, and send a trade proposal. The owner reviews it and accepts, declines, or counters. You then exchange and both confirm completion.",
+  'free': "Yes — 100% free to post and trade. We make money through optional premium features like listing boosts and verified badges. Your trades are never taxed.",
+  'safe': "Every user is phone-verified. For high-value trades, use our escrow service. Our dispute team is available to mediate any conflicts. Safety is our top priority.",
+  'state': "All 36 Nigerian states plus FCT Abuja are covered from Day 1 — Lagos, Abuja, Port Harcourt, Kano, Ibadan, Enugu, and every other state.",
+  'app': "iOS and Android apps are coming very soon! Both will have the full AI assistant built in so you get support anywhere, anytime.",
+  'nigeri': "Nigeria is our #1 priority market. 220M people, 65% informal economy, deep barter culture through Ajo cooperatives and market trading. We are digitising what Nigerians already do naturally.",
+  'scam': "We have phone verification, BVN-linked trust badges, AI fraud detection, escrow protection, and a dispute resolution team. Multiple layers protect every trade.",
+  'bank': "No bank account needed. That's the whole point of barter — exchange value directly without money, banks, or financial infrastructure.",
+  'default': "Great question! TradeByBater lets you exchange goods, skills, and services directly across all 36 Nigerian states — zero fees, maximum trust. Is there something specific about listing, trading, safety, or the platform you'd like to know?"
+};
+
+function getReply(msg) {
+  const m = msg.toLowerCase();
+  for(const [key, val] of Object.entries(responses)) {
+    if(m.includes(key)) return val;
+  }
+  return responses.default;
+}
+
+function addMsg(container, text, type) {
+  const d = document.createElement('div');
+  d.className = 'msg msg-' + type;
+  d.style.fontSize = '.8rem';
+  d.textContent = text;
+  container.appendChild(d);
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendDemo() {
+  const inp = document.getElementById('demo-input');
+  const msgs = document.getElementById('demo-msgs');
+  const val = inp.value.trim();
+  if(!val) return;
+  addMsg(msgs, val, 'user');
+  inp.value = '';
+  setTimeout(() => addMsg(msgs, getReply(val), 'ai'), 600);
+}
+
+document.getElementById('demo-input').addEventListener('keypress', e => { if(e.key === 'Enter') sendDemo(); });
+
+function sendFloat() {
+  const inp = document.getElementById('float-input');
+  const msgs = document.getElementById('float-msgs');
+  const val = inp.value.trim();
+  if(!val) return;
+  addMsg(msgs, val, 'user');
+  inp.value = '';
+  setTimeout(() => addMsg(msgs, getReply(val), 'ai'), 600);
+}
+</script>
+</body>
+</html>
