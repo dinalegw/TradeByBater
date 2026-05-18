@@ -434,6 +434,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'TradeByBater_Landing.html'));
 });
 
+app.get('/app.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'app.html'));
+});
+
+app.get('/app', (req, res) => {
+  res.redirect('/app.html');
+});
+
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ error: 'API endpoint not found' });
