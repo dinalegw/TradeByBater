@@ -49,3 +49,5 @@ Project repository: https://github.com/dinalegw/TradeByBater
 ---
 
 *TradeByBater: Exchange value directly, not currency.*
+
+***Trading Made Easier***
