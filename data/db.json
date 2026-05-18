@@ -1,0 +1,38 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "username": "admin",
+      "fullName": "Admin User",
+      "password": "password",
+      "role": "admin",
+      "token": "admin-token",
+      "createdAt": "2026-05-18T00:00:00.000Z"
+    }
+  ],
+  "listings": [
+    {
+      "id": "listing-1",
+      "title": "HP Laptop — Core i5, 8GB RAM",
+      "description": "A gently used HP laptop with reliable performance for design and coding tasks.",
+      "category": "Tech & Gadgets",
+      "wants": "Graphic design services (3 months)",
+      "location": "Lagos",
+      "ownerId": "user-1",
+      "ownerName": "Admin User",
+      "createdAt": "2026-05-18T00:00:00.000Z"
+    },
+    {
+      "id": "listing-2",
+      "title": "200W Solar Panel + Inverter",
+      "description": "Solar panel kit in working condition, ideal for home backup systems.",
+      "category": "Home & Furniture",
+      "wants": "Building materials or roofing sheets",
+      "location": "Abuja",
+      "ownerId": "user-1",
+      "ownerName": "Admin User",
+      "createdAt": "2026-05-18T00:00:00.000Z"
+    }
+  ],
+  "trades": []
+}

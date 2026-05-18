@@ -1,14 +1,11 @@
-<div align="center">
-
 # TradeByBater 🇳🇬
 ### Exchange value directly, not currency.
 **A modern barter marketplace built for Nigeria, designed to scale across Africa and the world.**
 
 ---
 
-> "TradeByBater digitises direct value exchange so communities can swap goods, skills, and services without currency."
+"TradeByBater digitises direct value exchange so communities can swap goods, skills, and services without currency."
 
-</div>
 
 ---
 
@@ -129,14 +126,78 @@ TradeByBater emphasizes adoption first, with revenue generated through premium s
 
 ## Getting Started
 
-Clone the repository:
+Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/dinalegw/TradeByBater.git
 cd TradeByBater
+npm install
 ```
 
-Open `TradeByBater_Landing.html` in your browser to review the landing page design and core product narrative.
+Run the server:
+
+```bash
+npm start
+```
+
+Open the landing page at:
+
+- `http://localhost:3000/` for the marketing landing page
+- `http://localhost:3000/app.html` for the live barter app
+
+---
+
+## Project Structure
+
+- `TradeByBater_Landing.html` — marketing landing page for the product
+- `server.js` — Express backend and API router
+- `data/db.json` — persistent storage for users, listings, and trades
+- `public/app.html` — frontend application shell for the barter marketplace
+- `public/js/app.js` — client-side logic for authentication, listings, and trade requests
+- `public/css/app.css` — app styling and responsive layout
+
+---
+
+## API Overview
+
+The server provides a minimal REST API:
+
+- `POST /api/auth/register` — create a new user account
+- `POST /api/auth/login` — authenticate and receive a bearer token
+- `GET /api/auth/me` — fetch the current user profile
+- `GET /api/categories` — retrieve trade categories
+- `GET /api/listings` — list active barter offers
+- `POST /api/listings` — create a new listing (authenticated)
+- `GET /api/trades` — view trade requests for the current user
+- `POST /api/trades` — send a trade request for a listing (authenticated)
+- `GET /api/admin/stats` — retrieve user, listing, and trade counts (admin only)
+- `GET /api/admin/users` — retrieve registered users (admin only)
+- `GET /api/admin/listings` — retrieve all listings with owner details (admin only)
+
+---
+
+## Admin Access
+
+The project includes a basic admin dashboard at `http://localhost:3000/admin.html`.
+
+To use it:
+
+1. Start the server with `npm start`.
+2. Open `http://localhost:3000/app.html` and sign in with the admin account.
+3. Navigate to `http://localhost:3000/admin.html`.
+
+The default admin credentials in `data/db.json` are:
+
+- username: `admin`
+- password: `password`
+
+The admin dashboard shows:
+
+- total users
+- total listings
+- total trades
+- recent listings and uploader details
+- registered user list
 
 ---
 

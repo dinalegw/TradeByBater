@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeByBater App</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo">TradeByBater</div>
+        <div class="subtitle">Direct barter trading across Nigeria.</div>
+      </div>
+      <nav class="app-nav">
+        <button data-view="listings" class="nav-button active">Marketplace</button>
+        <button data-view="create" class="nav-button">Create Listing</button>
+        <button data-view="trades" class="nav-button">My Trades</button>
+      </nav>
+      <div class="account-panel">
+        <span id="user-name">Not signed in</span>
+        <button id="logout-button" class="action-button hidden">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="auth-section" class="card auth-card">
+        <h2>Welcome to TradeByBater</h2>
+        <div class="auth-grid">
+          <form id="login-form" class="auth-form">
+            <h3>Sign In</h3>
+            <label>Username <input name="username" required /></label>
+            <label>Password <input name="password" type="password" required /></label>
+            <button type="submit" class="action-button">Login</button>
+          </form>
+          <form id="register-form" class="auth-form">
+            <h3>Register</h3>
+            <label>Full name <input name="fullName" required /></label>
+            <label>Username <input name="username" required /></label>
+            <label>Password <input name="password" type="password" required /></label>
+            <button type="submit" class="action-button">Create account</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="listings-view" class="card hidden">
+        <div class="section-header">
+          <div>
+            <h2>Marketplace</h2>
+            <p>Browse active barter listings and request a trade.</p>
+          </div>
+          <div class="filters">
+            <select id="category-filter">
+              <option value="">All categories</option>
+            </select>
+            <input id="search-input" type="search" placeholder="Search listings" />
+          </div>
+        </div>
+        <div id="listings-grid" class="listings-grid"></div>
+      </section>
+
+      <section id="create-view" class="card hidden">
+        <h2>Create a New Listing</h2>
+        <form id="create-listing-form" class="listing-form">
+          <label>Title <input name="title" required /></label>
+          <label>Category <select name="category" required></select></label>
+          <label>Location <input name="location" placeholder="Lagos, Abuja, etc." required /></label>
+          <label>What you have <textarea name="description" rows="3"></textarea></label>
+          <label>What you want <textarea name="wants" rows="2" required></textarea></label>
+          <button type="submit" class="action-button">Publish listing</button>
+        </form>
+      </section>
+
+      <section id="trades-view" class="card hidden">
+        <div class="section-header">
+          <div>
+            <h2>My Trade Requests</h2>
+            <p>Track pending and completed trade proposals.</p>
+          </div>
+        </div>
+        <div id="trades-grid" class="listings-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="listing-card-template">
+    <article class="listing-card">
+      <div>
+        <h3 class="listing-title"></h3>
+        <div class="listing-meta"></div>
+        <p class="listing-description"></p>
+      </div>
+      <div class="listing-actions">
+        <div class="listing-wants"></div>
+        <button class="trade-button action-button">Request trade</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="trade-card-template">
+    <article class="listing-card">
+      <div>
+        <h3 class="listing-title"></h3>
+        <div class="listing-meta"></div>
+        <p class="listing-description"></p>
+      </div>
+      <div class="listing-actions">
+        <div class="listing-wants"></div>
+        <span class="status-pill"></span>
+      </div>
+    </article>
+  </template>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Send Trade Request</h3>
+      <p id="modal-heading"></p>
+      <form id="trade-form">
+        <label>Offer message <textarea name="message" rows="4" required></textarea></label>
+        <div class="modal-actions">
+          <button type="button" id="cancel-trade" class="secondary-button">Cancel</button>
+          <button type="submit" class="action-button">Send request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
