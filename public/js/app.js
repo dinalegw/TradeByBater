@@ -28,7 +28,9 @@ const elements = {
   tradeForm: document.getElementById('trade-form'),
   cancelTrade: document.getElementById('cancel-trade'),
   listingTemplate: document.getElementById('listing-card-template'),
-  tradeTemplate: document.getElementById('trade-card-template')
+  tradeTemplate: document.getElementById('trade-card-template'),
+  loginError: document.getElementById('login-error'),
+  registerError: document.getElementById('register-error')
 };
 
 function apiRequest(url, options = {}) {
@@ -45,6 +47,20 @@ function apiRequest(url, options = {}) {
     }
     return data;
   });
+}
+
+function showError(errorElement, message) {
+  if (errorElement) {
+    errorElement.textContent = message;
+    errorElement.classList.remove('hidden');
+  }
+}
+
+function hideError(errorElement) {
+  if (errorElement) {
+    errorElement.textContent = '';
+    errorElement.classList.add('hidden');
+  }
 }
 
 function setView(viewId) {
@@ -241,14 +257,23 @@ elements.logoutButton.addEventListener('click', () => {
   state.token = null;
   state.user = null;
   setUser(null);
+  elements.loginForm.reset();
+  elements.registerForm.reset();
   setView('auth');
 });
 
 elements.loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  hideError(elements.loginError);
+  
   const formData = new FormData(elements.loginForm);
   const username = formData.get('username').trim();
   const password = formData.get('password').trim();
+
+  if (!username || !password) {
+    showError(elements.loginError, 'Please enter both username and password');
+    return;
+  }
 
   apiRequest('/api/auth/login', {
     method: 'POST',
@@ -259,21 +284,36 @@ elements.loginForm.addEventListener('submit', (event) => {
       state.token = data.token;
       localStorage.setItem('tradebybater-token', data.token);
       setUser(data.user);
+      elements.loginForm.reset();
+      elements.registerForm.reset();
+      hideError(elements.loginError);
       loadTrades();
       loadAppData();
       setView('listings');
     })
     .catch((error) => {
-      alert(error.message);
+      showError(elements.loginError, error.message);
     });
 });
 
 elements.registerForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  hideError(elements.registerError);
+  
   const formData = new FormData(elements.registerForm);
   const fullName = formData.get('fullName').trim();
   const username = formData.get('username').trim();
   const password = formData.get('password').trim();
+
+  if (!fullName || !username || !password) {
+    showError(elements.registerError, 'Please fill in all fields');
+    return;
+  }
+
+  if (password.length < 6) {
+    showError(elements.registerError, 'Password must be at least 6 characters');
+    return;
+  }
 
   apiRequest('/api/auth/register', {
     method: 'POST',
@@ -284,24 +324,43 @@ elements.registerForm.addEventListener('submit', (event) => {
       state.token = data.token;
       localStorage.setItem('tradebybater-token', data.token);
       setUser(data.user);
+      elements.loginForm.reset();
+      elements.registerForm.reset();
+      hideError(elements.registerError);
       loadTrades();
       loadAppData();
       setView('listings');
     })
     .catch((error) => {
-      alert(error.message);
+      showError(elements.registerError, error.message);
     });
 });
 
 elements.createListingForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const formData = new FormData(elements.createListingForm);
+  const title = formData.get('title').trim();
+  const category = formData.get('category');
+  const location = formData.get('location').trim();
+  const description = formData.get('description').trim();
+  const wants = formData.get('wants').trim();
+
+  if (!title || !category || !location || !wants) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  if (title.length < 5) {
+    alert('Title must be at least 5 characters');
+    return;
+  }
+
   const payload = {
-    title: formData.get('title').trim(),
-    category: formData.get('category'),
-    location: formData.get('location').trim(),
-    description: formData.get('description').trim(),
-    wants: formData.get('wants').trim()
+    title,
+    category,
+    location,
+    description,
+    wants
   };
 
   apiRequest('/api/listings', {
@@ -311,12 +370,13 @@ elements.createListingForm.addEventListener('submit', (event) => {
   })
     .then((listing) => {
       state.listings.unshift(listing);
-      renderListings();
       elements.createListingForm.reset();
+      renderListings();
       setView('listings');
+      alert('Listing created and sent for approval!');
     })
     .catch((error) => {
-      alert(error.message);
+      alert('Error creating listing: ' + error.message);
     });
 });
 
@@ -324,11 +384,22 @@ elements.tradeForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   if (!state.currentListingId) {
+    alert('Error: No listing selected');
     return;
   }
 
   const formData = new FormData(elements.tradeForm);
   const message = formData.get('message').trim();
+
+  if (!message) {
+    alert('Please enter a message');
+    return;
+  }
+
+  if (message.length < 10) {
+    alert('Message must be at least 10 characters');
+    return;
+  }
 
   apiRequest('/api/trades', {
     method: 'POST',
@@ -340,9 +411,10 @@ elements.tradeForm.addEventListener('submit', (event) => {
       closeModal();
       setView('trades');
       renderTrades();
+      alert('Trade request sent successfully!');
     })
     .catch((error) => {
-      alert(error.message);
+      alert('Error sending trade request: ' + error.message);
     });
 });
 

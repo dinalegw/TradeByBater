@@ -30,12 +30,14 @@
         <div class="auth-grid">
           <form id="login-form" class="auth-form">
             <h3>Sign In</h3>
+            <div id="login-error" class="error-message hidden"></div>
             <label>Username <input name="username" required /></label>
             <label>Password <input name="password" type="password" required /></label>
             <button type="submit" class="action-button">Login</button>
           </form>
           <form id="register-form" class="auth-form">
             <h3>Register</h3>
+            <div id="register-error" class="error-message hidden"></div>
             <label>Full name <input name="fullName" required /></label>
             <label>Username <input name="username" required /></label>
             <label>Password <input name="password" type="password" required /></label>

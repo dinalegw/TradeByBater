@@ -7,6 +7,22 @@
       "passwordHash": "$2b$10$JAEmN5TU3NQATAS9cHRgxu0FzXJ2XKla6X0VMDRY5hOMiRhp3PEiq",
       "role": "admin",
       "createdAt": "2026-05-18T00:00:00.000Z"
+    },
+    {
+      "id": "d547a0c3-7f80-42fd-afa4-eb3edc334380",
+      "username": "testuser",
+      "fullName": "Test User",
+      "passwordHash": "$2b$10$WpoH2J1WqIvop79pVQ/VTe9WpqsiMDH35dImVoOYBObW3XP7Y7C3i",
+      "role": "user",
+      "createdAt": "2026-05-19T17:36:42.470Z"
+    },
+    {
+      "id": "d9924861-4299-4c29-9de3-366d1c63c712",
+      "username": "newuser",
+      "fullName": "New User",
+      "passwordHash": "$2b$10$Xcc6ZxEqu3ez64fVvKyIiupuw5yDZeQGnz3kXOYDuH5fF4B9aN3SC",
+      "role": "user",
+      "createdAt": "2026-05-19T17:39:42.079Z"
     }
   ],
   "listings": [
