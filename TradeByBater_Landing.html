@@ -491,54 +491,167 @@ function toggleFaq(el) {
   if(!wasOpen) el.classList.add('open');
 }
 
-// Demo AI chat responses
-const responseSets = {
-  list: [
-    "Start by tapping 'List Something to Trade.' Describe your item clearly, add photos if available, and say what you want in exchange. Your listing will go live in seconds.",
-    "To post a listing, enter what you have, choose a category, describe the condition, and explain what you want. Then publish it so other traders can discover it."
-  ],
-  trade: [
-    "Browse the marketplace by category or location, then choose a listing you want. Send a direct trade request and wait for the owner to accept, decline, or counter. Once agreed, exchange and confirm completion.",
-    "Find a good match, click the listing, and send a clear offer message. The owner reviews it and can approve or counter the trade. That is how barter deals move forward." 
-  ],
-  free: [
-    "Yes — posting and trading are free. We earn revenue through optional features like boosted listings, verified trader badges, and premium tools for businesses.",
-    "The platform is free to use for buyers and sellers. Optional paid upgrades are only for extra visibility and trust-building features." 
-  ],
-  safe: [
-    "We require phone verification and we monitor listings for suspicious patterns. For higher-value trades, use escrow and our dispute process to stay protected.",
-    "Safety is critical. We combine user verification, AI moderation, and a trust score system to keep the marketplace secure." 
-  ],
-  state: [
-    "All 36 Nigerian states plus the FCT are supported. Lagos, Abuja, Port Harcourt, Kano, Ibadan, Enugu and every major market are included.",
-    "The platform is built for Nigeria first and covers every state from Day 1, ensuring broad reach and local relevance." 
-  ],
-  app: [
-    "The web app is live now. Mobile apps are coming soon and will include the same AI support and listing experience.",
-    "Use the browser-based app today. The iOS and Android versions will follow with the full TradeByBater experience." 
-  ],
-  scam: [
-    "We use AI to flag suspicious activity, phone verification for every account, and an optional escrow workflow for higher-risk trades.",
-    "Our system is designed to reduce scams with verification, moderation, and a dispute team available when needed." 
-  ],
-  bank: [
-    "No bank account is needed. Barter is built for direct exchange, so you can trade using goods, skills, and services instead of money.",
-    "TradeByBater works without banks. You only need a phone and something to trade, which makes it accessible for many Nigerians." 
-  ],
-  nigeri: [
-    "Nigeria is our priority market because its informal economy and strong trade culture make it a perfect fit for barter.",
-    "We focus on Nigeria first because barter is already part of everyday life here — from markets to cooperative groups." 
+// AI Chat Engine - Smart Conversational System
+const aiResponses = {
+  greetings: {
+    keywords: ['hi', 'hello', 'hey', 'whatsup', 'what\'s up', 'howdy', 'greetings', 'sup', 'yo'],
+    responses: [
+      '👋 Hey there! Welcome to TradeByBater. I\'m here to help you trade smarter. What can I help you with today?',
+      'Howdy! 🇳🇬 Ready to start bartering? I\'m here to answer any questions about listings, trades, or the platform.',
+      'Welcome! 👋 I\'m your TradeByBater AI assistant. Ask me about how to get started, find items, or complete a trade.',
+      'Greetings! What brings you here today? Looking to list something or find a good deal?'
+    ]
+  },
+  name: {
+    keywords: ['your name', 'who are you', 'what\'s your name', 'call you', 'who\'s this', 'who r u'],
+    responses: [
+      'I\'m the TradeByBater AI Assistant! 🤖 My job is to help Nigerians trade smarter, faster, and safer. What would you like to know?',
+      'You can call me TradeByBater\'s AI! I\'m available 24/7 to help you navigate barter trading across Nigeria. How can I assist?',
+      'I\'m your personal trade assistant on TradeByBater. Think of me as your guide to hassle-free bartering. What do you need help with?'
+    ]
+  },
+  how_to_list: {
+    keywords: ['list something', 'how to list', 'post an item', 'create listing', 'upload', 'add item', 'sell something', 'put something up'],
+    responses: [
+      'Here\'s how to list on TradeByBater:\n1️⃣ Click "Create Listing"\n2️⃣ Tell us what you have (be specific!)\n3️⃣ Choose a category (Tech, Fashion, Home, etc.)\n4️⃣ Say what you want in exchange\n5️⃣ Add photos if you can\n6️⃣ Hit publish!\n\nYour listing goes live instantly!',
+      'Ready to list? It takes 2 minutes:\n• Describe your item clearly\n• Pick a category\n• Add what you want\n• Upload photos\n• Publish\n\nThat\'s it! Buyers will start seeing your listing right away.',
+      'Listing is simple: Go to "List Something," describe your item, choose a category, say what you want, and publish. Your item reaches traders across Nigeria instantly!'
+    ]
+  },
+  how_to_trade: {
+    keywords: ['how to trade', 'find item', 'request trade', 'make offer', 'send offer', 'make a trade', 'browse listings', 'search'],
+    responses: [
+      'Trading on TradeByBater is easy:\n1️⃣ Browse listings by category or location\n2️⃣ Find something you like\n3️⃣ Send a trade request with your offer\n4️⃣ Wait for them to accept or counter\n5️⃣ Once agreed, arrange pickup/delivery\n6️⃣ Complete the trade\n\nThat\'s barter in action!',
+      'Here\'s the flow:\n• Search the marketplace\n• Find a listing you want\n• Click and read the details\n• Send a trade request\n• Negotiate if needed\n• Agree and execute the trade\n\nIt\'s that simple!',
+      'To trade: Browse items → Find what you want → Send an offer → Negotiate if needed → Complete the exchange. You can trade goods, skills, or services!'
+    ]
+  },
+  locations: {
+    keywords: ['where', 'location', 'state', 'city', 'available in', 'which states', 'lagos', 'abuja', 'kano', 'ibadan', 'port harcourt', 'enugu', 'all states'],
+    responses: [
+      '✅ TradeByBater is available across ALL 36 Nigerian states + FCT!\n\nMajor hubs: Lagos, Abuja, Port Harcourt, Kano, Ibadan, Enugu, Oyo, Delta, and more.\n\nNo matter where you are in Nigeria, you can start trading today!',
+      'We cover the entire nation! 🇳🇬 Every state in Nigeria is on TradeByBater. Whether you\'re in a big city or a smaller town, traders are waiting to connect with you.',
+      'All of Nigeria! 🌍 Lagos, Abuja, PH, Kano, Ibadan, Enugu, and every state in between. We\'re built for Nigerian traders everywhere.'
+    ]
+  },
+  cost: {
+    keywords: ['cost', 'price', 'free', 'charge', 'fee', 'pay', 'money', 'how much'],
+    responses: [
+      '💯 Listing and trading are completely FREE! No hidden fees, no commissions.\n\nWe make money through optional extras like:\n• Boost your listing (increase visibility)\n• Verified trader badge\n• Premium business tools\n\nBut basic trading? Always free.',
+      'Great news! TradeByBater is free to use. Post listings, browse, and trade without spending a naira. We only charge for optional boosters and premium badges.',
+      'It\'s free! 🎉 No costs for listing or trading. We may offer optional paid features later for extra visibility, but the core platform is completely free for all users.'
+    ]
+  },
+  safety_security: {
+    keywords: ['safe', 'security', 'scam', 'protect', 'trusted', 'verified', 'verify', 'fraudulent', 'fake'],
+    responses: [
+      'Safety is our priority! 🛡️\n• All users are phone-verified\n• AI moderation monitors all listings\n• Seller/buyer ratings and reviews\n• Escrow available for high-value trades\n• Dispute team handles conflicts\n• Report & block features\n\nTrade with confidence!',
+      'We keep you safe with:\n✅ Phone verification for everyone\n✅ AI-powered fraud detection\n✅ User ratings & reviews\n✅ Escrow for valuable items\n✅ Human support for disputes\n\nYour safety matters to us!',
+      'TradeByBater combines tech + trust:\n• Verified phone numbers\n• AI watching for scams\n• Community ratings\n• Escrow protection\n• Quick dispute resolution\n\nBarter safely with peace of mind.'
+    ]
+  },
+  payment_methods: {
+    keywords: ['payment', 'bank', 'transfer', 'money', 'cash', 'how do i pay'],
+    responses: [
+      'Great thing about barter: No payment needed! 💱\n\nTradeByBater isn\'t about money transfers. You trade goods, skills, or services directly. No bank account required — just something to exchange and a willingness to barter!\n\nThis is perfect for Nigeria\'s informal economy.',
+      'Here\'s the beauty of barter: No money changes hands! You trade what you have for what you want. No bank transfers, no payment apps, just direct exchange. Perfect for getting what you need without spending.',
+      'Barter = No payments! 🔄 You exchange items directly. Don\'t have a bank account? No problem. TradeByBater works for everyone because it\'s about swapping goods and services, not money.'
+    ]
+  },
+  categories: {
+    keywords: ['category', 'categories', 'what can i trade', 'what items', 'what\'s available'],
+    responses: [
+      'TradeByBater supports many categories:\n📱 Tech & Gadgets\n👔 Fashion & Clothing\n🏠 Home & Furniture\n🌾 Food & Agriculture\n🎓 Education & Skills\n🚗 Transport & Autos\n🎨 Creative Arts\n💼 Services & Business\n\nAnd more! Pick what fits your item.',
+      'We accept trades in:\n• Electronics & tech gear\n• Clothes & fashion\n• Furniture & home items\n• Farm products & food\n• Learning & courses\n• Vehicles\n• Art & crafts\n• Professional skills\n\nMost things can be traded!',
+      'Browse our categories: Tech, Fashion, Home goods, Agricultural products, Education, Transport, Creative services, and more. If you can describe it, you can trade it!'
+    ]
+  },
+  trust_ratings: {
+    keywords: ['rating', 'reputation', 'trust score', 'reviews', 'how do i build', 'credibility'],
+    responses: [
+      'Build trust through:\n⭐ Complete successful trades\n⭐ Get rated by trading partners\n⭐ Respond quickly to offers\n⭐ Be honest in descriptions\n⭐ Keep your word\n\nYour rating increases with each positive trade. High ratings = more trusted trader!',
+      'Your trust score grows as you complete trades. Buyers & sellers rate each other. The more successful exchanges you do, the higher your rating climbs. Simple!',
+      'Ratings come from traders you exchange with. Complete a trade → get rated → build your reputation. Higher ratings mean more people want to trade with you. It\'s that straightforward!'
+    ]
+  },
+  dispute_resolution: {
+    keywords: ['dispute', 'problem', 'conflict', 'disagree', 'issue', 'complaint'],
+    responses: [
+      'Got a problem? We\'ve got your back! 🤝\n\n1️⃣ Try talking it out with the other trader\n2️⃣ Use the platform\'s messaging system\n3️⃣ If stuck, submit a dispute report\n4️⃣ Our team reviews it\n5️⃣ We mediate and find a fair solution\n\nWe prioritize fair outcomes for both parties.',
+      'Disputes happen, but we handle them:\n• Message the trader directly\n• Use in-app dispute tools\n• Submit evidence\n• Our team reviews fairly\n• Resolution within 48 hours\n\nWe\'re here to keep the marketplace trustworthy.',
+      'Having issues? Don\'t worry:\n→ Try messaging first\n→ Document the problem\n→ File a dispute report\n→ Our support team investigates\n→ We find a fair solution\n\nYour concerns matter!'
+    ]
+  },
+  mobile_apps: {
+    keywords: ['app', 'mobile', 'android', 'iphone', 'ios', 'download', 'phone'],
+    responses: [
+      'Mobile apps are coming soon! 📱\n\n• Web version is live NOW\n• iPhone app coming very soon\n• Android app in development\n• Same features on mobile\n• AI assistant on all platforms\n\nFor now, use the web version on your phone — it works great!',
+      'The web platform works on all phones right now! 📱 Native Android and iOS apps are coming, but you can start trading today through your browser. Full mobile experience guaranteed.',
+      'Android & iOS apps launching soon! For now, visit TradeByBater on your mobile browser. Everything works perfectly, and you get the same features as the app.'
+    ]
+  },
+  getting_started: {
+    keywords: ['getting started', 'how do i start', 'new user', 'beginner', 'first time', 'never traded', 'where do i begin'],
+    responses: [
+      '🚀 Getting started is easy:\n1️⃣ Sign up with your phone number\n2️⃣ Verify your number\n3️⃣ Browse listings OR create one\n4️⃣ Find something you like\n5️⃣ Send a trade request\n6️⃣ Complete your first exchange!\n\nYou\'re ready to barter!',
+      'Here\'s your first steps:\n• Create an account\n• Verify your number\n• Add a profile picture (optional)\n• Post your first listing\n• Browse & make an offer\n• Complete the trade\n\nEasy peasy! You\'re a trader now.',
+      'Welcome! 👋 Sign up → Verify → Browse → List → Trade. That\'s the journey. Most traders complete their first exchange within hours. You can too!'
+    ]
+  },
+  testimonials: {
+    keywords: ['reviews', 'what do people say', 'does it work', 'success stories', 'testimonial'],
+    responses: [
+      '✅ Real traders are finding success on TradeByBater! Nigerians in Lagos, Abuja, PH, and beyond are bartering successfully every day. People love:\n• No fees or commissions\n• Safe, verified traders\n• Fast exchanges\n• Community-driven platform\n\nJoin thousands of happy traders!',
+      'Traders love us because:\n• Genuine barter opportunities\n• Real people, real trades\n• Supportive community\n• Quick transactions\n• Fair for everyone\n\nStart your success story today!',
+      'Nigerians are already using TradeByBater to get what they need without spending money. Join the barter revolution! 🇳🇬'
+    ]
+  },
+  business_sellers: {
+    keywords: ['business', 'seller', 'wholesale', 'bulk', 'merchant', 'shop', 'store'],
+    responses: [
+      'Businesses love TradeByBater too! 💼\n\n• Bulk trading opportunities\n• Reach many buyers at once\n• Verified merchant tools\n• Business premium features\n• Growth analytics\n\nPerfect for managing inventory & expanding reach!',
+      'If you\'re a business:\n• Post multiple listings\n• Use bulk tools\n• Get verified merchant badge\n• Access business analytics\n• Premium visibility options\n\nScale your barter business with us!',
+      'TradeByBater works for shops and businesses too! List multiple items, reach more traders, and grow your network. Premium business tools available!'
+    ]
+  },
+  culture: {
+    keywords: ['nigerian', 'african', 'culture', 'tradition', 'barter tradition', 'why africa'],
+    responses: [
+      '🇳🇬 Barter is in our DNA! Trading goods is part of African culture for centuries. TradeByBater brings that tradition online — connecting traders across Nigeria with the same trust-based system our parents used at the market.\n\nIt\'s modern, it\'s digital, it\'s us!',
+      'Barter is our heritage! 🌍 African markets thrived on direct exchange. TradeByBater honors that tradition while making it digital and accessible to everyone across Nigeria.',
+      'From Abuja to Lagos to Kano — barter is how Nigerians have always done business. TradeByBater digitizes this beautiful tradition for modern times. 🇳🇬'
+    ]
+  },
+  default: [
+    'That\'s a great question! 🤔 I\'m here to help with anything about trading on TradeByBater. Tell me more — are you looking to list something, find an item, or learn about safety?',
+    'Interesting! 💭 I might not have a specific answer, but I know about listings, trades, safety, locations, categories, and more. What would help you most right now?',
+    'Good question! 📝 Feel free to ask me about:\n• How to list & trade\n• Safety & trust\n• Locations & categories\n• Costs & payments\n• Getting started\n\nWhat interests you?',
+    'I\'m here to help! 🤝 Ask me anything about TradeByBater — from the basics to trading tips. What\'s on your mind?'
   ]
 };
 
 function getReply(msg) {
-  const m = msg.toLowerCase();
-  for (const [key, answers] of Object.entries(responseSets)) {
-    if (m.includes(key)) {
-      return answers[Math.floor(Math.random() * answers.length)];
+  if (!msg || msg.trim().length === 0) {
+    return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
+  }
+
+  const m = msg.toLowerCase().trim();
+
+  // Check each category for keyword matches
+  for (const [category, data] of Object.entries(aiResponses)) {
+    if (category === 'default') continue;
+
+    if (data.keywords && Array.isArray(data.keywords)) {
+      for (const keyword of data.keywords) {
+        if (m.includes(keyword)) {
+          return data.responses[Math.floor(Math.random() * data.responses.length)];
+        }
+      }
     }
   }
-  return "That's a great question. TradeByBater helps you exchange goods, skills, and services directly across Nigeria with a secure community-first workflow. Ask me anything specific about listings, trades, safety, or how to get started.";
+
+  // If no match found, return a smart default
+  return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
 }
 
 function addMsg(container, text, type) {
