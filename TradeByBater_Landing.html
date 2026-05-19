@@ -643,16 +643,10 @@ function getReply(msg) {
 
     if (data.keywords && Array.isArray(data.keywords)) {
       for (const keyword of data.keywords) {
-        if (m.includes(keyword)) {
-          return data.responses[Math.floor(Math.random() * data.responses.length)];
-        }
-      }
-    }
-  }
-
-  // If no match found, return a smart default
-  return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
-}
+        // Use word boundary matching to avoid partial matches (e.g., "yo" in "your")
+        try {
+          const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          if (new RegExp('\\b'
 
 function addMsg(container, text, type) {
   const d = document.createElement('div');
