@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "node scripts/build.js",
+    "test": "node test-ai.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

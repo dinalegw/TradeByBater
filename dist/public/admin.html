@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeByBater Admin</title>
+  <link rel="stylesheet" href="css/app.css">
+  <style>
+    .admin-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .stat-card { padding: 1rem; background: #f8faf7; border: 1px solid rgba(26,107,60,.12); border-radius: 18px; }
+    .stat-title { margin: 0 0 .5rem; font-size: .95rem; color: #5e7165; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: #19482d; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid rgba(26,107,60,.12); }
+    th { background: #f4f8f5; }
+    .danger { color: #b02a37; }
+    .admin-note { margin-top: 1rem; color: #5e7165; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <div class="logo">TradeByBater Admin</div>
+        <div class="subtitle">Monitor users, listings, and trade activity.</div>
+      </div>
+      <div class="account-panel">
+        <span id="admin-user">Admin</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="admin-header">
+          <div>
+            <h2>Site Overview</h2>
+            <p class="admin-note">Only admin users can view this page. Use the existing login form on the app to authenticate as an admin.</p>
+          </div>
+          <button id="refresh-admin" class="action-button">Refresh</button>
+        </div>
+        <div class="card-grid" id="admin-stats"></div>
+      </section>
+
+      <section class="card">
+        <h2>Recent Listings</h2>
+        <div class="table-container">
+          <table id="admin-listings-table">
+            <thead>
+              <tr><th>Title</th><th>Category</th><th>Owner</th><th>Location</th><th>Status</th><th>Flags</th><th>When</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Registered Users</h2>
+        <div class="table-container">
+          <table id="admin-users-table">
+            <thead>
+              <tr><th>Username</th><th>Name</th><th>Role</th><th>Joined</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="js/admin.js"></script>
+</body>
+</html>
