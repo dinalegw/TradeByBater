@@ -9,11 +9,14 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 
+const https = require('https');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
 const JWT_SECRET = process.env.JWT_SECRET || 'tradebybater-secret-key';
 const JWT_EXPIRES = process.env.JWT_EXPIRES || '8h';
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
+const AI_MODEL = process.env.AI_MODEL || 'gpt-3.5-turbo';
 
 const bannedTerms = [
   'scam',
@@ -54,6 +57,8 @@ const listingLimiter = rateLimit({
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'TradeByBater_Landing.html')));
+app.get('/TradeByBater_Landing.html', (req, res) => res.sendFile(path.join(__dirname, 'TradeByBater_Landing.html')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(apiLimiter);
 
@@ -67,6 +72,70 @@ function readDb() {
 
 function writeDb(db) {
   fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
+}
+
+function openAiRequest(path, body) {
+  return new Promise((resolve, reject) => {
+    if (!OPENAI_API_KEY) {
+      return reject(new Error('OpenAI API key is not configured. Set OPENAI_API_KEY in .env.'));
+    }
+
+    const payload = JSON.stringify(body);
+    const req = https.request(
+      {
+        hostname: 'api.openai.com',
+        path,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        }
+      },
+      (res) => {
+        let data = '';
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          try {
+            const parsed = JSON.parse(data || '{}');
+            if (res.statusCode < 200 || res.statusCode >= 300) {
+              const errorMessage = parsed.error?.message || `OpenAI API error ${res.statusCode}`;
+              return reject(new Error(errorMessage));
+            }
+            resolve(parsed);
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+    );
+
+    req.on('error', reject);
+    req.write(payload);
+    req.end();
+  });
+}
+
+async function getAiReply(message) {
+  const systemPrompt = `You are TradeByBater's AI assistant. Answer clearly and help users with the Nigerian barter marketplace. When possible, use local examples and keep responses short, friendly, and practical.`;
+
+  const response = await openAiRequest('/v1/chat/completions', {
+    model: AI_MODEL,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message }
+    ],
+    temperature: 0.8,
+    max_tokens: 512
+  });
+
+  const reply = response?.choices?.[0]?.message?.content;
+  if (!reply) {
+    throw new Error('AI returned an empty response.');
+  }
+  return reply.trim();
 }
 
 function sanitizeString(value) {
@@ -152,6 +221,22 @@ const categories = [
 
 app.get('/api/categories', (req, res) => {
   res.json(categories);
+});
+
+app.post('/api/ai', async (req, res) => {
+  const message = sanitizeString(req.body.message || '');
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required.' });
+  }
+
+  try {
+    const reply = await getAiReply(message);
+    res.json({ reply });
+  } catch (error) {
+    console.error('AI request failed:', error);
+    const warning = OPENAI_API_KEY ? 'AI service returned an error.' : 'AI is not configured. Please set OPENAI_API_KEY in .env.';
+    res.status(500).json({ error: warning });
+  }
 });
 
 app.get('/api/listings', (req, res) => {

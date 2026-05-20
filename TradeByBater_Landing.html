@@ -670,28 +670,52 @@ function addMsg(container, text, type) {
   d.textContent = text;
   container.appendChild(d);
   container.scrollTop = container.scrollHeight;
+  return d;
 }
 
-function sendDemo() {
+async function askAi(message) {
+  const fallback = getReply(message);
+  try {
+    const response = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.reply) {
+      throw new Error(result.error || 'AI service did not return a response.');
+    }
+    return result.reply;
+  } catch (error) {
+    console.error('AI request failed:', error);
+    return `${fallback} \n\n(Showing local fallback because the AI service is unavailable.)`;
+  }
+}
+
+async function sendDemo() {
   const inp = document.getElementById('demo-input');
   const msgs = document.getElementById('demo-msgs');
   const val = inp.value.trim();
-  if(!val) return;
+  if (!val) return;
   addMsg(msgs, val, 'user');
   inp.value = '';
-  setTimeout(() => addMsg(msgs, getReply(val), 'ai'), 600);
+  const typing = addMsg(msgs, '⏳ Thinking...', 'ai');
+  const reply = await askAi(val);
+  typing.textContent = reply;
 }
 
-document.getElementById('demo-input').addEventListener('keypress', e => { if(e.key === 'Enter') sendDemo(); });
+document.getElementById('demo-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendDemo(); });
 
-function sendFloat() {
+async function sendFloat() {
   const inp = document.getElementById('float-input');
   const msgs = document.getElementById('float-msgs');
   const val = inp.value.trim();
-  if(!val) return;
+  if (!val) return;
   addMsg(msgs, val, 'user');
   inp.value = '';
-  setTimeout(() => addMsg(msgs, getReply(val), 'ai'), 600);
+  const typing = addMsg(msgs, '⏳ Thinking...', 'ai');
+  const reply = await askAi(val);
+  typing.textContent = reply;
 }
 </script>
 </body>
