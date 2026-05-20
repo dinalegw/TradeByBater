@@ -646,7 +646,22 @@ function getReply(msg) {
         // Use word boundary matching to avoid partial matches (e.g., "yo" in "your")
         try {
           const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          if (new RegExp('\\b'
+          const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+          if (regex.test(m)) {
+            return data.responses[Math.floor(Math.random() * data.responses.length)];
+          }
+        } catch (error) {
+          // Fallback to basic contains check if regex fails
+          if (m.includes(keyword.toLowerCase())) {
+            return data.responses[Math.floor(Math.random() * data.responses.length)];
+          }
+        }
+      }
+    }
+  }
+
+  return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
+}
 
 function addMsg(container, text, type) {
   const d = document.createElement('div');
